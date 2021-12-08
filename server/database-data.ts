@@ -1,6 +1,9 @@
-import { DbUser } from "./db-user";
 
-export const USERS: {[key: number]: DbUser} = {};
+
+import {DbUser} from "./db-user";
+
+export const USERS: {[key:number]:DbUser} = {};
+
 
 export const LESSONS = {
 

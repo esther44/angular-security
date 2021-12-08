@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import { AuthService } from '../services/auth.service';
+import {AuthService} from "../services/auth.service";
 
 @Component({
   selector: 'signup',
@@ -9,7 +9,14 @@ import { AuthService } from '../services/auth.service';
 })
 export class SignupComponent implements OnInit {
 
-    form:FormGroup;
+    form: FormGroup;
+    errors: Array<string> = [];
+
+    messagePerErrorCode = {
+      min: 'The minimum length is 8 characters',
+      uppercase: 'At least one upper case character',
+      digits: 'The string should have a minimum of 2 digits'
+    };
 
     constructor(private fb: FormBuilder, private authService: AuthService) {
 
@@ -32,13 +39,16 @@ export class SignupComponent implements OnInit {
 
         if (val.email && val.password && val.password === val.confirm) {
 
-          this.authService.signUp(val.email, val.password)
-          .subscribe(
-            () => console.log('User created successfully !'),
-            console.error
-            );
+            this.authService.signUp(val.email, val.password)
+                .subscribe(
+                    () => console.log("User created successfully"),
+                    response => this.errors = response.error.errors
+                );
         }
 
     }
 
 }
+
+
+

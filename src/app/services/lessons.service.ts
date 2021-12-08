@@ -7,7 +7,10 @@ import {Lesson} from "../model/lesson";
 @Injectable()
 export class LessonsService {
 
-    constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient) {
+
+
+    }
 
 
     loadAllLessons() {

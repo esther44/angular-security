@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { User } from '../model/user';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { map } from 'lodash';
+
 
 export const ANONYMOUS_USER: User = {
   id: undefined,
@@ -26,6 +26,5 @@ export class AuthService {
     .shareReplay()
     .do(user => this.subject.next(user)
     );
-
   }
 }

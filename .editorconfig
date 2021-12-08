@@ -1,4 +1,4 @@
-# Editor configuration, see https://editorconfig.org
+# Editor configuration, see http://editorconfig.org
 root = true
 
 [*]
@@ -7,27 +7,7 @@ indent_style = space
 indent_size = 2
 insert_final_newline = true
 trim_trailing_whitespace = true
-ij_typescript_spaces_within_imports = true
 
 [*.md]
 max_line_length = off
 trim_trailing_whitespace = false
-
-[*.ts]
-# https://google.github.io/styleguide/jsguide.html
-max_line_length = 120
-quote_type = single
-curly_bracket_next_line = false
-spaces_around_operators = true
-spaces_around_brackets = inside
-indent_brace_style = K&R
-
-[*.html]
-# https://google.github.io/styleguide/htmlcssguide.html
-quote_type = double
-max_line_length = 140
-
-[*.scss]
-# https://sass-guidelin.es/#syntax--formatting
-max_line_length = 140
-quote_type = single
