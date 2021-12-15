@@ -1,48 +1,63 @@
-import { Request, Response } from "express";
-import { sessionStore } from "./session-store";
-import { db } from './database'
-import { DbUser } from "./db-user";
+
+
+import {Request, Response} from "express";
+import {db} from "./database";
 import * as argon2 from 'argon2';
-import { randomBytes } from "./security.utils";
+import {DbUser} from "./db-user";
+import { createSessionToken } from "./security.utils";
 
-export function login(req: Request, res: Response): void {
-  const creditentials = req.body;
 
-  const user: DbUser = db.findUserByEmail(creditentials.email);
 
-  if (!user) {
-    res.sendStatus(403);
-  } else {
-    loginAndBuildResponse(creditentials, user, res);
-  }
+export function login(req: Request, res: Response) {
+
+    const credentials = req.body;
+
+    const user = db.findUserByEmail(credentials.email);
+
+    if (!user) {
+        res.sendStatus(403);
+    }
+    else {
+        loginAndBuildResponse(credentials, user, res);
+    }
+
 }
 
-async function loginAndBuildResponse(creditentials: any, user: DbUser, res: Response){
+async function loginAndBuildResponse(credentials:any, user:DbUser,  res: Response) {
 
-  try {
-   const sessionId = attemptLogin(creditentials, user);
+    try {
 
-    console.log('login successfull');
-    res.cookie('SESSIONID', sessionId, {httpOnly: true, secure: true});
-    res.status(200).json({id: user.id, email: user.email});
-  } catch (err) {
-    console.log('login failed');
-    res.sendStatus(403);
-  }
+        const sessionToken = await attemptLogin(credentials, user);
+
+        console.log("Login successful");
+
+        res.cookie("SESSIONID", sessionToken, {httpOnly:true, secure:true});
+
+        res.status(200).json({id:user.id, email:user.email});
+
+    }catch (err) {
+
+        console.log("Login failed!");
+
+        res.sendStatus(403);
+    }
 }
 
 
-async function attemptLogin(creditentials: any, user: DbUser) {
-  const isPasswordValid = await argon2.verify(user.passwordDigest,
-  creditentials.password);
+async function attemptLogin(credentials:any, user:DbUser) {
 
-  if (!isPasswordValid) {
-    throw new Error('Password Invalid');
-  }
+    const isPasswordValid = await argon2.verify(user.passwordDigest,
+                                                credentials.password);
 
-  const sessionId = await randomBytes(32).then(bytes => bytes.toString('hex'));
-  console.log('sessionId', sessionId);
-  sessionStore.createSession(sessionId, user);
+    if (!isPasswordValid) {
+        throw new Error("Password Invalid");
+    }
 
-    return sessionId;
+    return createSessionToken(user.id.toString());
 }
+
+
+
+
+
+

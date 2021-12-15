@@ -10,9 +10,9 @@ import {Router} from "@angular/router";
 })
 export class SignupComponent implements OnInit {
 
-    form: FormGroup;
+    form:FormGroup;
 
-    errors: string[] = [];
+    errors:string[] = [];
 
     messagePerErrorCode = {
         min: 'The minimum length is 10 characters',
@@ -22,11 +22,12 @@ export class SignupComponent implements OnInit {
     };
 
 
-    constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {
+    constructor(private fb: FormBuilder, private authService: AuthService,
+                    private router:Router) {
         this.form = this.fb.group({
-            email: ['test@gmail.com', Validators.required],
-            password: ['Password10', Validators.required],
-            confirm: ['Password10', Validators.required]
+            email: ['test@gmail.com',Validators.required],
+            password: ['Password10',Validators.required],
+            confirm: ['Password10',Validators.required]
         });
     }
 
@@ -43,12 +44,11 @@ export class SignupComponent implements OnInit {
 
             this.authService.signUp(val.email, val.password)
                 .subscribe(
-                    () =>{
-                      this.router.navigateByUrl('/');
-                      console.log("User created successfully")
+                    () => {
+                        this.router.navigateByUrl('/');
+
+                        console.log("User created successfully")
                     },
-
-
                     response => this.errors = response.error.errors
                 );
 

@@ -1,16 +1,19 @@
-import { Request, Response } from "express";
-import { sessionStore } from './session-store';
-import { User } from '../src/app/model/user';
 
 
-export function getUser(req: Request, res: Response): void {
-const sessionId = req.cookies['SESSIONID'];
+import {Request, Response} from "express";
+import { db } from "./database";
+import { DbUser } from "./db-user";
 
-const user: User = sessionStore.findUserBySessionId(sessionId);
 
-  if (user) {
-    res.status(200).json(user);
-  }else {
-    res.sendStatus(204);
-  }
+
+export function getUser(req: Request, res: Response) {
+
+    // retrieve the actual user based on JWT content
+    const user: DbUser = db.findUserById(req['userId']);
+
+    if (user) {
+        res.status(200).json({email: user.email, ud: user.id});
+    } else {
+        res.sendStatus(204);
+    }
 }

@@ -6,17 +6,21 @@ import * as fs from 'fs';
 import * as https from 'https';
 import {readAllLessons} from "./read-all-lessons.route";
 import {createUser} from "./create-user.route";
-import { getUser } from './get-user.route';
-import { logout } from './logout.route';
-import { login } from './login.route';
+import {getUser} from "./get-user.route";
+import {logout} from "./logout.route";
+import {login} from "./login.route";
+import { retrieveUserIdFromRequest } from './get-user.middleware';
+import { checkifAuthenticated } from './auth.middleware';
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 
 
 const app: Application = express();
 
-app.use(bodyParser.json());
 app.use(cookieParser());
+app.use(retrieveUserIdFromRequest);
+app.use(bodyParser.json());
+
 
 const commandLineArgs = require('command-line-args');
 
@@ -29,7 +33,7 @@ const options = commandLineArgs(optionDefinitions);
 
 // REST API
 app.route('/api/lessons')
-    .get(readAllLessons);
+    .get(checkifAuthenticated, readAllLessons);
 
 app.route('/api/signup')
     .post(createUser);
@@ -38,7 +42,7 @@ app.route('/api/user')
     .get(getUser);
 
 app.route('/api/logout')
-    .post(logout);
+    .post(checkifAuthenticated, logout);
 
 app.route('/api/login')
     .post(login);

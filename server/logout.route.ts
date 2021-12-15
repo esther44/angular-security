@@ -1,15 +1,12 @@
-import { Request, Response } from "express";
-import { sessionStore } from "./session-store";
 
 
-export function logout(req: Request, res: Response){
-  const sessionId = req.cookies['SESSIONID'];
+import {Request, Response} from 'express';
 
-  sessionStore.destroySession(sessionId);
 
-  res.clearCookie('SESSIONID');
 
-  res.clearCookie( 'XSRF-TOKEN');
+export function logout(req: Request, res: Response) {
 
-  res.status(200).json({message: 'Logout Successful'});
+    res.clearCookie("SESSIONID");
+
+    res.status(200).json({message: 'Logout Successful'});
 }

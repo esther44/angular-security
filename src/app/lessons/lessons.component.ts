@@ -18,6 +18,7 @@ export class LessonsComponent implements OnInit {
     isLoggedIn$: Observable<boolean>;
 
     constructor(private lessonsService: LessonsService, private authService: AuthService) {
+
     }
 
     ngOnInit() {
