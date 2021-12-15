@@ -4,7 +4,7 @@ import {Request, Response} from "express";
 import {db} from "./database";
 import * as argon2 from 'argon2';
 import {DbUser} from "./db-user";
-import { createSessionToken } from "./security.utils";
+import { createCsrfToken, createSessionToken } from "./security.utils";
 
 
 
@@ -28,11 +28,12 @@ async function loginAndBuildResponse(credentials:any, user:DbUser,  res: Respons
     try {
 
         const sessionToken = await attemptLogin(credentials, user);
+        const csrfToken = await createCsrfToken(sessionToken);
 
         console.log("Login successful");
 
-        res.cookie("SESSIONID", sessionToken, {httpOnly:true, secure:true});
-
+        res.cookie('SESSIONID', sessionToken, {httpOnly:true, secure:true});
+        res.cookie('XSRF-TOKEN', csrfToken);
         res.status(200).json({id:user.id, email:user.email});
 
     }catch (err) {
